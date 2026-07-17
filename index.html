@@ -75,14 +75,22 @@
     </div>
 
     <script>
-      // ===== 設定：GASウェブアプリ(API)のURL =====
-      const API_URL = 'https://script.google.com/macros/s/AKfycbxoFrR74P-3TX0bPL_NXojT3kmbXkwneKrk71eLda53ykSMIpiYVCMkB3kv7TUWFkxqJA/exec';
+      // ===== 設定：GASウェブアプリ(API)のURL（apiパラメータが無い場合の既定） =====
+      const DEFAULT_API_URL = 'https://script.google.com/macros/s/AKfycbxoFrR74P-3TX0bPL_NXojT3kmbXkwneKrk71eLda53ykSMIpiYVCMkB3kv7TUWFkxqJA/exec';
       // ==========================================
 
       // URLパラメータの取得
       const urlParams = new URLSearchParams(window.location.search);
       const NO = urlParams.get('no');
       const STAFF_ID = urlParams.get('staffId');
+      const API_ID = urlParams.get('api');
+
+      // apiパラメータ（GASのデプロイID）があれば、そのGASを呼び出す
+      // ※script.google.com 以外に飛ばないよう、IDの形式のみ受け付ける
+      let API_URL = DEFAULT_API_URL;
+      if (API_ID && /^[A-Za-z0-9_-]+$/.test(API_ID)) {
+        API_URL = 'https://script.google.com/macros/s/' + API_ID + '/exec';
+      }
 
       // JSONPでGASを呼び出す共通関数
       let jsonpCounter = 0;
