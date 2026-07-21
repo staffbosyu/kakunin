@@ -30,7 +30,25 @@
         border-bottom: 2px solid #2ecc71;
         padding-bottom: 10px;
       }
-      .info-list { margin: 0 0 24px 0; padding: 0; list-style: none; }
+      .job-block {
+        margin-bottom: 24px;
+        padding-bottom: 8px;
+        border-bottom: 2px dashed #e2e8f0;
+      }
+      .job-block:last-of-type {
+        border-bottom: none;
+        margin-bottom: 8px;
+      }
+      .job-title {
+        font-size: 14px;
+        font-weight: bold;
+        color: #2ecc71;
+        margin-bottom: 14px;
+        padding: 8px 10px;
+        background: #f0fff4;
+        border-radius: 6px;
+      }
+      .info-list { margin: 0 0 8px 0; padding: 0; list-style: none; }
       .info-item {
         margin-bottom: 16px;
         border-bottom: 1px solid #edf2f7;
@@ -80,7 +98,8 @@
       // ==========================================
 
       // URLパラメータの取得
-      // sheet = 対象スプレッドシートのID（どのコピーのデータを読むかを指定）
+      // no は単一 "1" または複数 "1,2"
+      // sheet = 対象スプレッドシートのID
       const urlParams = new URLSearchParams(window.location.search);
       const NO = urlParams.get('no');
       const STAFF_ID = urlParams.get('staffId');
@@ -120,7 +139,6 @@
         document.body.appendChild(script);
       }
 
-      // HTMLエスケープ
       function escapeHtml(str) {
         if (str == null) return '';
         return String(str)
@@ -131,7 +149,6 @@
           .replace(/'/g, '&#39;');
       }
 
-      // 改行反映＋URLリンク化
       function linkify(str) {
         let html = escapeHtml(str).replace(/\n/g, '<br>');
         const urlPattern = /(https?:\/\/[^\s<>"']+)/g;
@@ -144,54 +161,70 @@
         contentEl.innerHTML = '<div class="msg" style="color:#e74c3c;">' + escapeHtml(msg) + '</div>';
       }
 
-      // 画面描画
-      function render(data) {
-        const rows = [
-          ['勤務日', escapeHtml(data.workDate)],
-          ['催事名', linkify(data.eventName)],
-          ['会場名', linkify(data.venueName)],
-          ['業務', linkify(data.task)],
-          ['時給', escapeHtml(data.hourlyWage)],
-          ['集合時間', escapeHtml(data.meetTime)],
-          ['集合場所', linkify(data.meetPlace)],
-          ['服装', linkify(data.clothing)],
-          ['備考', linkify(data.remarks)],
-          ['食事', linkify(data.meal)],
-          ['持ち物', linkify(data.belongings)],
-          ['終了時間', escapeHtml(data.endTime)]
+      function buildJobRows(job) {
+        return [
+          ['勤務日', escapeHtml(job.workDate)],
+          ['催事名', linkify(job.eventName)],
+          ['会場名', linkify(job.venueName)],
+          ['業務', linkify(job.task)],
+          ['時給', escapeHtml(job.hourlyWage)],
+          ['集合時間', escapeHtml(job.meetTime)],
+          ['集合場所', linkify(job.meetPlace)],
+          ['服装', linkify(job.clothing)],
+          ['備考', linkify(job.remarks)],
+          ['食事', linkify(job.meal)],
+          ['持ち物', linkify(job.belongings)],
+          ['終了時間', escapeHtml(job.endTime)]
         ];
+      }
 
-        let html = '<div class="info-list">';
-        rows.forEach(function(r) {
-          html += '<div class="info-item"><div class="info-label">' + r[0] +
-                  '</div><div class="info-value">' + r[1] + '</div></div>';
+      // 画面描画（1件でも複数でも jobs 配列で受け取る）
+      function render(data) {
+        const jobs = data.jobs || [];
+        if (jobs.length === 0) {
+          showError('表示する業務がありません。');
+          return;
+        }
+
+        let html = '';
+        jobs.forEach(function(job, index) {
+          html += '<div class="job-block">';
+          if (jobs.length > 1) {
+            html += '<div class="job-title">業務' + (index + 1) + '／' + jobs.length +
+                    '　集合 ' + escapeHtml(job.meetTime || '-') + '</div>';
+          }
+          html += '<div class="info-list">';
+          buildJobRows(job).forEach(function(r) {
+            html += '<div class="info-item"><div class="info-label">' + r[0] +
+                    '</div><div class="info-value">' + r[1] + '</div></div>';
+          });
+          html += '</div></div>';
         });
-        html += '</div>';
 
         if (data.isConfirmed) {
           html += '<div class="btn-box"><button class="btn" disabled>確認済み</button></div>';
           html += '<div class="msg" style="color:#7f8c8d;">この業務は確認手続きが完了しています。</div>';
         } else {
-          html += '<div class="btn-box" id="btn-area"><button class="btn" id="submit-btn">確認しました</button></div>';
+          const btnLabel = jobs.length > 1 ? 'すべて確認しました' : '確認しました';
+          html += '<div class="btn-box" id="btn-area"><button class="btn" id="submit-btn">' + btnLabel + '</button></div>';
           html += '<div id="result-msg" class="msg"></div>';
         }
         contentEl.innerHTML = html;
 
         if (!data.isConfirmed) {
-          document.getElementById('submit-btn').addEventListener('click', function() {
-            sendConfirm(data.workDate);
-          });
+          document.getElementById('submit-btn').addEventListener('click', sendConfirm);
         }
       }
 
-      // 確認ボタン送信
-      function sendConfirm(workDate) {
+      // 確認ボタン送信（複数業務をまとめて記録）
+      function sendConfirm() {
         const btn = document.getElementById('submit-btn');
+        const originalLabel = btn.innerText;
         btn.disabled = true;
         btn.innerText = '送信中...';
 
         callApi(
-          { action: 'confirm', no: NO, staffId: STAFF_ID, workDate: workDate, sheet: SHEET_ID },
+          { action: 'confirm', no: NO, staffId: STAFF_ID, sheet: SHEET_ID },
           function(res) {
             if (res && res.status === 'success') {
               document.getElementById('btn-area').innerHTML = '<button class="btn" disabled>確認済み</button>';
@@ -200,13 +233,13 @@
               msg.innerText = '確認手続きが完了しました。お疲れ様でした。';
             } else {
               btn.disabled = false;
-              btn.innerText = '確認しました';
+              btn.innerText = originalLabel;
               alert('エラーが発生しました: ' + (res && res.message ? res.message : '不明なエラー'));
             }
           },
           function() {
             btn.disabled = false;
-            btn.innerText = '確認しました';
+            btn.innerText = originalLabel;
             alert('通信エラーが発生しました。時間をおいて再度お試しください。');
           }
         );
