@@ -155,6 +155,17 @@
         return html.replace(urlPattern, '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>');
       }
 
+      // 会場名をGoogleマップ検索リンクにする（すでにURLが入っている場合はそのままリンク化）
+      function venueWithMapsLink(venueName) {
+        if (venueName == null || String(venueName).trim() === '') return '';
+        const text = String(venueName);
+        if (/https?:\/\//.test(text)) {
+          return linkify(text);
+        }
+        const mapsUrl = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(text);
+        return '<a href="' + mapsUrl + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(text) + '</a>';
+      }
+
       const contentEl = document.getElementById('content');
 
       function showError(msg) {
@@ -165,7 +176,7 @@
         return [
           ['勤務日', escapeHtml(job.workDate)],
           ['催事名', linkify(job.eventName)],
-          ['会場名', linkify(job.venueName)],
+          ['会場名', venueWithMapsLink(job.venueName)],
           ['業務', linkify(job.task)],
           ['時給', escapeHtml(job.hourlyWage)],
           ['集合時間', escapeHtml(job.meetTime)],
