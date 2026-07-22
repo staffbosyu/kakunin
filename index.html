@@ -7,86 +7,169 @@
     <style>
       * { box-sizing: border-box; }
       body {
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-        background-color: #f0f2f5;
-        padding: 12px;
-        color: #333;
+        font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP",
+                     -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: linear-gradient(180deg, #e8eef5 0%, #f0f2f5 40%, #f0f2f5 100%);
+        padding: 16px 12px 32px;
+        color: #1a202c;
         margin: 0;
+        line-height: 1.5;
+        -webkit-font-smoothing: antialiased;
       }
       .card {
-        max-width: 600px;
+        max-width: 640px;
         margin: 0 auto;
         background: #fff;
-        padding: 20px 16px;
-        border-radius: 12px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        padding: 24px 18px 28px;
+        border-radius: 16px;
+        box-shadow: 0 8px 24px rgba(26, 54, 93, 0.08);
       }
       h2 {
         text-align: center;
-        color: #1a1a1a;
-        margin-top: 0;
-        font-size: 20px;
-        margin-bottom: 24px;
-        border-bottom: 2px solid #2ecc71;
-        padding-bottom: 10px;
+        color: #0f172a;
+        margin: 0 0 8px;
+        font-size: 22px;
+        font-weight: 800;
+        letter-spacing: 0.04em;
+      }
+      .page-sub {
+        text-align: center;
+        color: #64748b;
+        font-size: 13px;
+        margin-bottom: 22px;
+        padding-bottom: 16px;
+        border-bottom: 3px solid #22c55e;
       }
       .job-block {
-        margin-bottom: 24px;
-        padding-bottom: 8px;
-        border-bottom: 2px dashed #e2e8f0;
+        margin-bottom: 20px;
+        padding: 16px 14px 8px;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
       }
-      .job-block:last-of-type {
-        border-bottom: none;
-        margin-bottom: 8px;
-      }
+      .job-block:last-of-type { margin-bottom: 8px; }
       .job-title {
-        font-size: 14px;
-        font-weight: bold;
-        color: #2ecc71;
-        margin-bottom: 14px;
-        padding: 8px 10px;
-        background: #f0fff4;
-        border-radius: 6px;
-      }
-      .info-list { margin: 0 0 8px 0; padding: 0; list-style: none; }
-      .info-item {
-        margin-bottom: 16px;
-        border-bottom: 1px solid #edf2f7;
-        padding-bottom: 12px;
-      }
-      .info-item:last-child { border-bottom: none; padding-bottom: 0; }
-      .info-label { font-size: 12px; color: #718096; font-weight: bold; margin-bottom: 6px; }
-      .info-value {
         font-size: 15px;
-        color: #2d3748;
-        line-height: 1.6;
-        word-break: break-all;
-        white-space: pre-wrap;
+        font-weight: 800;
+        color: #15803d;
+        margin: -4px 0 14px;
+        padding: 10px 12px;
+        background: #dcfce7;
+        border-left: 4px solid #22c55e;
+        border-radius: 0 8px 8px 0;
+        letter-spacing: 0.02em;
       }
-      .info-value a { color: #3182ce; text-decoration: underline; font-weight: 500; }
-      .btn-box { text-align: center; margin-top: 25px; }
+      .highlight-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-bottom: 16px;
+      }
+      .highlight-card {
+        background: #fff;
+        border: 1px solid #cbd5e1;
+        border-radius: 10px;
+        padding: 12px 12px 10px;
+      }
+      .highlight-card .info-label {
+        margin-bottom: 4px;
+        color: #64748b;
+      }
+      .highlight-card .info-value {
+        font-size: 20px;
+        font-weight: 800;
+        color: #0f172a;
+        letter-spacing: 0.02em;
+      }
+      .info-list { margin: 0; padding: 0; list-style: none; }
+      .info-item {
+        margin-bottom: 0;
+        padding: 12px 4px;
+        border-bottom: 1px solid #e2e8f0;
+      }
+      .info-item:last-child { border-bottom: none; }
+      .info-item.emphasis {
+        background: #fff;
+        margin: 0 -6px 0;
+        padding: 14px 10px;
+        border-radius: 8px;
+        border-bottom: 1px solid #e2e8f0;
+      }
+      .info-label {
+        font-size: 11px;
+        color: #94a3b8;
+        font-weight: 700;
+        margin-bottom: 5px;
+        letter-spacing: 0.08em;
+        text-transform: none;
+      }
+      .info-value {
+        font-size: 16px;
+        color: #1e293b;
+        line-height: 1.65;
+        word-break: break-word;
+        white-space: pre-wrap;
+        font-weight: 600;
+      }
+      .info-item.emphasis .info-value {
+        font-size: 18px;
+        font-weight: 800;
+        color: #0f172a;
+      }
+      .info-value a {
+        color: #2563eb;
+        text-decoration: underline;
+        font-weight: 700;
+      }
+      .btn-box { text-align: center; margin-top: 28px; }
       .btn {
-        background-color: #2ecc71;
+        background-color: #16a34a;
         color: #fff;
         border: none;
-        padding: 16px;
-        font-size: 16px;
-        border-radius: 8px;
+        padding: 18px 16px;
+        font-size: 17px;
+        border-radius: 10px;
         cursor: pointer;
         width: 100%;
-        font-weight: bold;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        font-weight: 800;
+        letter-spacing: 0.04em;
+        box-shadow: 0 4px 12px rgba(22, 163, 74, 0.28);
         -webkit-tap-highlight-color: transparent;
       }
-      .btn:active { background-color: #27ae60; }
-      .btn:disabled { background-color: #bdc3c7; color: #7f8c8d; cursor: not-allowed; box-shadow: none; }
-      .msg { text-align: center; font-weight: bold; margin-top: 20px; font-size: 15px; }
-      .loading { text-align: center; color: #718096; padding: 40px 0; font-size: 15px; }
+      .btn:active { background-color: #15803d; }
+      .btn:disabled {
+        background-color: #cbd5e1;
+        color: #64748b;
+        cursor: not-allowed;
+        box-shadow: none;
+      }
+      .msg {
+        text-align: center;
+        font-weight: 700;
+        margin-top: 18px;
+        font-size: 15px;
+        line-height: 1.6;
+      }
+      .loading {
+        text-align: center;
+        color: #64748b;
+        padding: 48px 0;
+        font-size: 16px;
+        font-weight: 600;
+      }
+      @media (max-width: 420px) {
+        .highlight-row { grid-template-columns: 1fr; }
+        h2 { font-size: 20px; }
+        .highlight-card .info-value { font-size: 18px; }
+        .info-value { font-size: 15px; }
+        .info-item.emphasis .info-value { font-size: 17px; }
+      }
     </style>
   </head>
   <body>
     <div class="card">
       <h2>業務詳細確認</h2>
+      <div class="page-sub">内容を確認のうえ、下部のボタンを押してください</div>
       <div id="content">
         <div class="loading">読み込み中...</div>
       </div>
@@ -173,19 +256,18 @@
       }
 
       function buildJobRows(job) {
+        // [ラベル, 値HTML, 強調クラス]
         return [
-          ['勤務日', escapeHtml(job.workDate)],
-          ['催事名', linkify(job.eventName)],
-          ['会場名', venueWithMapsLink(job.venueName)],
-          ['業務', linkify(job.task)],
-          ['時給', escapeHtml(job.hourlyWage)],
-          ['集合時間', escapeHtml(job.meetTime)],
-          ['集合場所', linkify(job.meetPlace)],
-          ['服装', linkify(job.clothing)],
-          ['備考', linkify(job.remarks)],
-          ['食事', linkify(job.meal)],
-          ['持ち物', linkify(job.belongings)],
-          ['終了時間', escapeHtml(job.endTime)]
+          ['催事名', linkify(job.eventName), 'emphasis'],
+          ['会場名', venueWithMapsLink(job.venueName), 'emphasis'],
+          ['業務', linkify(job.task), 'emphasis'],
+          ['時給', escapeHtml(job.hourlyWage), ''],
+          ['集合場所', linkify(job.meetPlace), 'emphasis'],
+          ['服装', linkify(job.clothing), ''],
+          ['備考', linkify(job.remarks), ''],
+          ['食事', linkify(job.meal), ''],
+          ['持ち物', linkify(job.belongings), ''],
+          ['終了時間', escapeHtml(job.endTime), '']
         ];
       }
 
@@ -201,12 +283,18 @@
         jobs.forEach(function(job, index) {
           html += '<div class="job-block">';
           if (jobs.length > 1) {
-            html += '<div class="job-title">業務' + (index + 1) + '／' + jobs.length +
-                    '　集合 ' + escapeHtml(job.meetTime || '-') + '</div>';
+            html += '<div class="job-title">業務' + (index + 1) + '／' + jobs.length + '</div>';
           }
+          html += '<div class="highlight-row">';
+          html += '<div class="highlight-card"><div class="info-label">勤務日</div><div class="info-value">' +
+                  escapeHtml(job.workDate || '-') + '</div></div>';
+          html += '<div class="highlight-card"><div class="info-label">集合時間</div><div class="info-value">' +
+                  escapeHtml(job.meetTime || '-') + '</div></div>';
+          html += '</div>';
           html += '<div class="info-list">';
           buildJobRows(job).forEach(function(r) {
-            html += '<div class="info-item"><div class="info-label">' + r[0] +
+            const cls = r[2] ? ' info-item ' + r[2] : ' info-item';
+            html += '<div class="' + cls.trim() + '"><div class="info-label">' + r[0] +
                     '</div><div class="info-value">' + r[1] + '</div></div>';
           });
           html += '</div></div>';
@@ -214,7 +302,7 @@
 
         if (data.isConfirmed) {
           html += '<div class="btn-box"><button class="btn" disabled>確認済み</button></div>';
-          html += '<div class="msg" style="color:#7f8c8d;">この業務は確認手続きが完了しています。</div>';
+          html += '<div class="msg" style="color:#64748b;">この業務は確認手続きが完了しています。</div>';
         } else {
           const btnLabel = jobs.length > 1 ? 'すべて確認しました' : '確認しました';
           html += '<div class="btn-box" id="btn-area"><button class="btn" id="submit-btn">' + btnLabel + '</button></div>';
