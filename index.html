@@ -353,6 +353,12 @@
           function(res) {
             if (res && res.status === 'success') {
               render(res);
+              // 表示後に既読を後追い記録（失敗しても画面には影響させない）
+              callApi(
+                { action: 'markRead', no: NO, staffId: STAFF_ID, sheet: SHEET_ID },
+                function() {},
+                function() {}
+              );
             } else {
               showError(res && res.message ? res.message : 'データを取得できませんでした。');
             }
