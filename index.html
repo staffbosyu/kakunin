@@ -61,7 +61,7 @@
       }
       .highlight-row {
         display: grid;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 1fr 1fr 1fr;
         gap: 10px;
         margin-bottom: 16px;
       }
@@ -262,6 +262,7 @@
           ['会場名', venueWithMapsLink(job.venueName), 'emphasis'],
           ['業務', linkify(job.task), 'emphasis'],
           ['時給', escapeHtml(job.hourlyWage), ''],
+          ['市外交通費', escapeHtml(job.transportFee), ''],
           ['集合場所', linkify(job.meetPlace), 'emphasis'],
           ['服装', linkify(job.clothing), ''],
           ['備考', linkify(job.remarks), ''],
@@ -288,6 +289,8 @@
           html += '<div class="highlight-row">';
           html += '<div class="highlight-card"><div class="info-label">勤務日</div><div class="info-value">' +
                   escapeHtml(job.workDate || '-') + '</div></div>';
+          html += '<div class="highlight-card"><div class="info-label">開始時間</div><div class="info-value">' +
+                  escapeHtml(job.startTime || '-') + '</div></div>';
           html += '<div class="highlight-card"><div class="info-label">集合時間</div><div class="info-value">' +
                   escapeHtml(job.meetTime || '-') + '</div></div>';
           html += '</div>';
