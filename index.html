@@ -164,6 +164,24 @@
       const STAFF_ID = urlParams.get('staffId');
       const SHEET_ID = urlParams.get('sheet');
 
+      function isAndroid() {
+        return /Android/i.test(navigator.userAgent || '');
+      }
+
+      function buildGasPageUrl() {
+        const q = new URLSearchParams();
+        q.set('action', 'page');
+        q.set('no', NO || '');
+        q.set('staffId', STAFF_ID || '');
+        q.set('sheet', SHEET_ID || '');
+        return API_URL + '?' + q.toString();
+      }
+
+      // Android Chrome は JSONP の Google 転送をブロックするため、GASのHTMLを直接開く
+      function goToGasPage() {
+        window.location.replace(buildGasPageUrl());
+      }
+
       // JSONPでGASを呼び出す共通関数
       let jsonpCounter = 0;
       function callApi(params, onSuccess, onError) {
@@ -322,6 +340,8 @@
       // 初期表示
       if (!NO || !STAFF_ID || !SHEET_ID) {
         showError('エラー: 不正なアクセスです。');
+      } else if (isAndroid()) {
+        goToGasPage();
       } else {
         callApi(
           { action: 'getData', no: NO, staffId: STAFF_ID, sheet: SHEET_ID },
@@ -339,7 +359,7 @@
             }
           },
           function() {
-            showError('通信エラーが発生しました。時間をおいて再度お試しください。');
+            goToGasPage();
           }
         );
       }
