@@ -160,9 +160,22 @@
       // no は単一 "1" または複数 "1,2"
       // sheet = 対象スプレッドシートのID
       const urlParams = new URLSearchParams(window.location.search);
+      const GO = urlParams.get('g');
       const NO = urlParams.get('no');
       const STAFF_ID = urlParams.get('staffId');
       const SHEET_ID = urlParams.get('sheet');
+      const WORK_DATE = urlParams.get('date');
+
+      // 短い確認リンク → GAS が Google フォーム（詳細事前入力）へリダイレクト
+      if (GO) {
+        const q = new URLSearchParams();
+        q.set('action', 'go');
+        if (NO) q.set('no', NO);
+        if (STAFF_ID) q.set('staffId', STAFF_ID);
+        if (SHEET_ID) q.set('sheet', SHEET_ID);
+        if (WORK_DATE) q.set('date', WORK_DATE);
+        window.location.replace(API_URL + '?' + q.toString());
+      }
 
       // JSONPでGASを呼び出す共通関数
       let jsonpCounter = 0;
@@ -320,7 +333,9 @@
       }
 
       // 初期表示
-      if (!NO || !STAFF_ID || !SHEET_ID) {
+      if (GO) {
+        // 短い確認リンクは上で Google フォームへ転送済み
+      } else if (!NO || !STAFF_ID || !SHEET_ID) {
         showError('エラー: 不正なアクセスです。');
       } else {
         callApi(
