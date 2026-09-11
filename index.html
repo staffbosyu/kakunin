@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>業務確認フォーム</title>
+    <title>しばらくお待ちください</title>
     <style>
       * { box-sizing: border-box; }
       body {
@@ -135,6 +135,18 @@
         font-size: 16px;
         font-weight: 600;
       }
+      .wait-screen {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 24px;
+        font-size: 18px;
+        font-weight: 700;
+        color: #475569;
+      }
+      .hidden { display: none; }
       @media (max-width: 420px) {
         h2 { font-size: 20px; }
         .info-value { font-size: 15px; }
@@ -143,7 +155,8 @@
     </style>
   </head>
   <body>
-    <div class="card">
+    <div id="wait-screen" class="wait-screen">しばらくお待ちください</div>
+    <div id="legacy-card" class="card hidden">
       <h2>業務詳細確認</h2>
       <div class="page-sub">内容を確認のうえ、下部のボタンを押してください</div>
       <div id="content">
@@ -334,10 +347,16 @@
 
       // 初期表示
       if (GO) {
-        // 短い確認リンクは上で Google フォームへ転送済み
+        // 短い確認リンクは上で Google フォームへ転送済み（待ち画面のまま）
       } else if (!NO || !STAFF_ID || !SHEET_ID) {
+        document.getElementById('wait-screen').classList.add('hidden');
+        document.getElementById('legacy-card').classList.remove('hidden');
+        document.title = '業務確認フォーム';
         showError('エラー: 不正なアクセスです。');
       } else {
+        document.getElementById('wait-screen').classList.add('hidden');
+        document.getElementById('legacy-card').classList.remove('hidden');
+        document.title = '業務確認フォーム';
         callApi(
           { action: 'getData', no: NO, staffId: STAFF_ID, sheet: SHEET_ID },
           function(res) {
